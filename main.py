@@ -1,4 +1,3 @@
-
 #!/usr/bin/env pybricks-micropython
 
 # Before running this program, make sure the client and server EV3 bricks are
@@ -7,18 +6,20 @@
 
 # The server must be started before the client!
 
-from pybricks.messaging import BluetoothMailboxServer, TextMailbox
+from pybricks.messaging import BluetoothMailboxClient, TextMailbox
 
-server = BluetoothMailboxServer()
-mbox = TextMailbox('greeting', server)
+# This is the name of the remote EV3 or PC we are connecting to.
+SERVER = 'ev3dev'
 
-# The server must be started before the client!
-print('waiting for connection...')
-server.wait_for_connection()
+client = BluetoothMailboxClient()
+mbox = TextMailbox('greeting', client)
+
+print('establishing connection...')
+client.connect(SERVER)
 print('connected!')
 
-# In this program, the server waits for the client to send the first message
-# and then sends a reply.
+# In this program, the client sends the first message and then waits for the
+# server to reply.
+mbox.send('hello!')
 mbox.wait()
 print(mbox.read())
-mbox.send('hello to you!')
